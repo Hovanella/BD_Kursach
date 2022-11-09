@@ -49,16 +49,6 @@ public class TrackController {
         return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 
-    @GetMapping(value = "", params = {"number", "page"}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getTracks(@RequestParam final Long number, @RequestParam final Long page) {
-
-        try {
-            return new ResponseEntity<>(trackService.getTracks(page, number), HttpStatus.OK);
-        } catch (final Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-    }
 
     @PostMapping(value = "/{id}/file", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getTrackFileById(@PathVariable final Long id) throws IOException {
@@ -71,5 +61,17 @@ public class TrackController {
         return new ResponseEntity<>(newFile.getAbsolutePath().substring(newFile.getAbsolutePath().lastIndexOf('\\') + 1), HttpStatus.OK);
 
     }
+
+    @GetMapping(value = "tracks-with-ratings", params = {"number", "page"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getTracks(@RequestParam final Long number, @RequestParam final Long page) {
+
+        try {
+            return new ResponseEntity<>(trackService.getTracksForUser(page, number), HttpStatus.OK);
+        } catch (final Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 
 }

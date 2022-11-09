@@ -35,25 +35,27 @@ public class UserController {
     @PostMapping(value = "login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> login(@RequestBody final UnauthorizedUser unauthorizedUser) {
 
-        try{
+        try {
             this.userService.login(unauthorizedUser);
-        } catch (final BadCredentialsException e){
+        } catch (final BadCredentialsException e) {
             return new ResponseEntity<>("User with login " + unauthorizedUser.getLogin() + " doesn't exist", HttpStatus.BAD_REQUEST);
         }
 
         final String token = this.jwtUtil.generateToken(unauthorizedUser.getLogin());
+
         return new ResponseEntity<>(token, HttpStatus.OK);
 
     }
 
     @PostMapping(value = "register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> register(@RequestBody final UnregisteredUser unauthorizedUser) throws Exception {
-        try{
+        try {
             this.userService.register(unauthorizedUser);
-        }catch (final Exception e){
+        } catch (final Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("User registered", HttpStatus.OK);
+        final String token = this.jwtUtil.generateToken(unauthorizedUser.getLogin());
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
 
@@ -67,8 +69,9 @@ public class UserController {
 
     @GetMapping(value = "{userId}/playlists", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<PlaylistDTO>> getUserPlaylists(@PathVariable("userId") final Long userId) {
-        final var playlists = this.userService.getUserPlaylists(userId) ;
+        final var playlists = this.userService.getUserPlaylists(userId);
         return new ResponseEntity<>(playlists, HttpStatus.OK);
     }
+
 
 }

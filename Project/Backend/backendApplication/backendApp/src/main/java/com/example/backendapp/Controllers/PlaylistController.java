@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.annotation.sql.DataSourceDefinition;
 import java.util.Collection;
 
 @Controller
 @CrossOrigin("*")
 @RequestMapping("/playlists/")
-@DataSourceDefinition(name = "DBAdminDataSource", className = "JpaConfig")
 public class PlaylistController {
 
     private final PlaylistService playlistService;

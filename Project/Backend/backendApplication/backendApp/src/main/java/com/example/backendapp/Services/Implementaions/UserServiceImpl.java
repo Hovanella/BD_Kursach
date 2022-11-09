@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
+
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -48,11 +49,11 @@ public class UserServiceImpl implements UserService {
             throw new BadCredentialsException("User with login " + login + " not found");
         }
 
-        final User userFromRepository = this.userRepository.findUserById(this.userRepository.GetUserIdByLoginAndPassword(login,password));
+        final User userFromRepository = this.userRepository.findUserById(this.userRepository.GetUserIdByLoginAndPassword(login, password));
         if (null == userFromRepository) {
             throw new BadCredentialsException("Wrong password");
         }
-        System.out.println(unauthorizedUser.getPassword() + " " + userFromRepository.getPassword());
+
     }
 
     @Override
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
         }
 
         try {
-            this.userRepository.saveUser(user.getLogin(),user.getPassword(),user.getEmail(),user.getRoleId());
+            this.userRepository.saveUser(user.getLogin(), user.getPassword(), user.getEmail(), user.getRoleId());
         } catch (final DataAccessException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
@@ -71,11 +72,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer getUserTrackRating(final Long userId, final Long ratingId) {
-         final var rate = this.ratingRepository.getUserTrackRating(userId, ratingId);
-         if (null == rate) {
-             return -1;
-         }
-            return rate;
+        final var rate = this.ratingRepository.getUserTrackRating(userId, ratingId);
+        if (null == rate) {
+            return -1;
+        }
+        return rate;
     }
 
     @Override
@@ -89,4 +90,5 @@ public class UserServiceImpl implements UserService {
 
         return PlaylistDTOs;
     }
+
 }

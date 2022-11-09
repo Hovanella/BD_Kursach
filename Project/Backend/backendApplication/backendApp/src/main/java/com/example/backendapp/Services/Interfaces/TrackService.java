@@ -19,4 +19,6 @@ public interface TrackService {
     byte[] getTrackFileById(Long id);
 
     String getTrackFileNameById(Long id);
+
+    Collection<TrackDto> getTracksForUser(Long page, Long number);
 }

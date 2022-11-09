@@ -18,4 +18,5 @@ public interface UserService {
     Integer getUserTrackRating(Long userId, Long ratingId);
 
     Collection<PlaylistDTO> getUserPlaylists(Long userId);
+
 }

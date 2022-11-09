@@ -11,8 +11,12 @@ import com.example.backendapp.Repositories.TrackRepository;
 import com.example.backendapp.Services.Interfaces.TrackService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
@@ -85,5 +89,29 @@ public class TrackServiceImpl implements TrackService {
         return this.trackRepository.findById(id).get().getName();
     }
 
+    @Override
+    public Collection<TrackDto> getTracksForUser(Long page, Long number) {
+        var currentUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        if (currentUser == null)
+            throw new BadCredentialsException("Not authorized");
+        var allTracks = new ArrayList<TrackDto>();
+      /*
+
+        trackRepository.findAllForUser().forEach(track -> allTracks.add(modelMapper.map(track, TrackDto.class)));
+
+        var userRatings = new ArrayList<RatingDto>();
+        ratingRepository.findByUser(currentUser).forEach(rating -> userRatings.add(modelMapper.map(rating, RatingDto.class)));
+
+        for (var track : allTracks) {
+            for (var rating : userRatings) {
+                if (track.getId().equals(rating.getTrack().getId())) {
+                    track.setRating(rating.getMark());
+                }
+            }
+        }*/
+
+        return allTracks;
+    }
 
 }

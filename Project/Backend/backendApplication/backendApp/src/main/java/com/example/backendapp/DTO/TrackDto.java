@@ -11,9 +11,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrackDto implements Serializable {
-    private  Long id;
-    private  String name;
-    private  String genreName;
-    private  String authorName;
-    private  Long trackFileId;
+    private Long id;
+    private String name;
+    private String genreName;
+    private String authorName;
+    private Integer rate;
+    private Long trackFileId;
 }
