@@ -1,0 +1,110 @@
+
+
+.newTrackForm {
+    width: 40%;
+    height: 70%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+input[type="file"] {
+   opacity: 0;
+}
+
+.fileNameLabel {
+    cursor: pointer;
+    height: 20%;
+    width: 80%;
+    background-color: orange;
+    font-size: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fileNameSpan {
+    padding: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.authorSelectButton, .genreSelectButton {
+    width: 90%;
+    height: 20%;
+    font-size: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 10px;
+}
+
+.selectButton, .submitButton {
+    background-color: orange;
+    border-radius: 10px;
+}
+
+.authorSelect, .genreSelect {
+    width: 80%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.authorInput{
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.disableAuthor, .disableGenre {
+    display: none;
+}
+
+.select{
+    width: 90%;
+    height: 100%;
+    margin-top: 5px;
+    font-size: 16px;
+}
+
+
+.submitButton {
+    font-size: 35px;
+    width: 40%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.nameInput,.genreInput, .authorInput {
+    width: 90%;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+margin-top: 5px;
+    padding: 1rem;
+
+}
+
+
+
+h2,.submitButton{
+margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.genreInput:focus,  .select:focus, .authorInput:focus, .nameInput:focus{
+    outline-color: orange;
+}
+.fileInput:focus + .fileNameLabel{
+    outline:black auto 5px;
+}
+

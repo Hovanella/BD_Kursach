@@ -11,5 +11,5 @@ public class UnregisteredUser {
     private String login;
     private String password;
     private String email;
-    private Long roleId = 3L;
+    private Long roleId = 4L;
 }

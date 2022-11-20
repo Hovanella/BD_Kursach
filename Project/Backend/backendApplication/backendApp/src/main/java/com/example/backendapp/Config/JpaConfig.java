@@ -16,7 +16,7 @@ public class JpaConfig {
     @Bean(name = "DBAdminDataSource")
     @Primary
     public DataSource DbAdminDataSource() {
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
+        final DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.url("jdbc:oracle:thin:@localhost:1521:xe?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true");
         dataSourceBuilder.username("kursach_admin");
         dataSourceBuilder.password("qwerty");

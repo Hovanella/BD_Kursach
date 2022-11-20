@@ -11,7 +11,10 @@ import com.example.backendapp.Services.Interfaces.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -24,55 +27,55 @@ public class UserServiceImpl implements UserService {
     private final RatingRepository ratingRepository;
     private final PlaylistRepository playlistRepository;
     private final ModelMapper modelMapper;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(final UserRepository userRepository, final RatingRepository ratingRepository, final PlaylistRepository playlistRepository, final ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepository userRepository, RatingRepository ratingRepository, PlaylistRepository playlistRepository, ModelMapper modelMapper, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
         this.playlistRepository = playlistRepository;
         this.modelMapper = modelMapper;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public User findUserById(final Long id) {
-        final User userById = this.userRepository.findUserById(id);
+    public User findUserById(Long id) {
+        User userById = userRepository.findUserById(id);
         return userById;
     }
 
     @Override
-    public void login(final UnauthorizedUser unauthorizedUser) {
+    public void login(UnauthorizedUser unauthorizedUser) {
+        
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(unauthorizedUser.getLogin(), unauthorizedUser.getPassword());
 
-        final String login = unauthorizedUser.getLogin();
-        final String password = unauthorizedUser.getPassword();
-
-        if (null == userRepository.GetUserIdByLogin(login)) {
-            throw new BadCredentialsException("User with login " + login + " not found");
-        }
-
-        final User userFromRepository = this.userRepository.findUserById(this.userRepository.GetUserIdByLoginAndPassword(login, password));
-        if (null == userFromRepository) {
-            throw new BadCredentialsException("Wrong password");
+        try {
+            authenticationManager.authenticate(authenticationToken);
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException(e.getMessage());
         }
 
     }
 
     @Override
-    public void register(final UnregisteredUser user) {
+    public void register(UnregisteredUser user) {
 
-        if (null != userRepository.GetUserIdByLogin(user.getLogin())) {
+        if (null != this.userRepository.GetUserIdByLogin(user.getLogin())) {
             throw new IllegalArgumentException("User with login " + user.getLogin() + " already exists");
         }
 
         try {
-            this.userRepository.saveUser(user.getLogin(), user.getPassword(), user.getEmail(), user.getRoleId());
-        } catch (final DataAccessException e) {
+            userRepository.saveUser(user.getLogin(), passwordEncoder.encode(user.getPassword()), user.getEmail(), user.getRoleId());
+        } catch (DataAccessException e) {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
 
     @Override
-    public Integer getUserTrackRating(final Long userId, final Long ratingId) {
-        final var rate = this.ratingRepository.getUserTrackRating(userId, ratingId);
+    public Integer getUserTrackRating(Long userId, Long ratingId) {
+        var rate = ratingRepository.getUserTrackRating(userId, ratingId);
         if (null == rate) {
             return -1;
         }
@@ -80,10 +83,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<PlaylistDTO> getUserPlaylists(final Long userId) {
+    public Collection<PlaylistDTO> getUserPlaylists(Long userId) {
 
-        final var PlaylistDTOs = this.playlistRepository.getUserPlaylists(userId).stream().map(playlist -> {
-            final PlaylistDTO playlistDTO = this.modelMapper.map(playlist, PlaylistDTO.class);
+        var PlaylistDTOs = playlistRepository.getUserPlaylists(userId).stream().map(playlist -> {
+            PlaylistDTO playlistDTO = modelMapper.map(playlist, PlaylistDTO.class);
             playlistDTO.setAuthorName(playlist.getUser().getLogin());
             return playlistDTO;
         }).collect(Collectors.toList());

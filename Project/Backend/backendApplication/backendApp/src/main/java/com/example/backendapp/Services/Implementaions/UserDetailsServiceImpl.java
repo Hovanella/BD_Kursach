@@ -15,14 +15,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(final UserRepository userRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        final User user = this.userRepository.findUserById(this.userRepository.GetUserIdByLogin(username));
+        User user = userRepository.findUserById(userRepository.GetUserIdByLogin(username));
 
         if (null == user) {
             throw new UsernameNotFoundException("User not found");

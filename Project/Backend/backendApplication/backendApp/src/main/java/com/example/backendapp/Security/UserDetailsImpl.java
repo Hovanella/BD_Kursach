@@ -11,24 +11,24 @@ import java.util.Collections;
 public class UserDetailsImpl implements UserDetails {
     private final User user;
 
-    public UserDetailsImpl(final User user) {
+    public UserDetailsImpl(User user) {
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        final String userRole = "ROLE_" + this.user.getRole().getName().toUpperCase();
+        String userRole = "ROLE_" + user.getRole().getName().toUpperCase();
         return Collections.singletonList(new SimpleGrantedAuthority(userRole));
     }
 
     @Override
     public String getPassword() {
-        return this.user.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.user.getLogin();
+        return user.getLogin();
     }
 
     @Override
@@ -52,6 +52,6 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public User getUser() {
-        return this.user;
+        return user;
     }
 }

@@ -25,13 +25,13 @@ public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public WebSecurityConfig(final JWTFilter jwtFilter, final UserDetailsServiceImpl userDetailsService) {
+    public WebSecurityConfig(JWTFilter jwtFilter, UserDetailsServiceImpl userDetailsService) {
         this.jwtFilter = jwtFilter;
         this.userDetailsService = userDetailsService;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(final AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -41,27 +41,26 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        final AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(this.userDetailsService).passwordEncoder(this.getPasswordEncoder());
-        final AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(getPasswordEncoder());
+        AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
         return
                 http.
-                        cors().and().
+                        cors().disable().
                         csrf().disable().
                         authorizeRequests().
                         anyRequest().permitAll().
-                        and().
-                        addFilterBefore(this.jwtFilter, UsernamePasswordAuthenticationFilter.class).
+                        and().antMatcher("localhost:3000/**").
+                        addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).
                         authenticationManager(authenticationManager).
                         sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
                         and().
                         build();
 
     }
-
 
 
 }

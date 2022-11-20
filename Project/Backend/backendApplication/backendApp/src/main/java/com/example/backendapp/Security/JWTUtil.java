@@ -17,17 +17,17 @@ public class JWTUtil {
     @Value("${jwt_secret}")
     private String secret;
 
-    public String generateToken(final String login) {
-        final Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(60).toInstant());
+    public String generateToken(String login) {
+        Date expirationDate = Date.from(ZonedDateTime.now().plusMinutes(60).toInstant());
 
-        return JWT.create().withSubject("User details").withClaim("login", login).withIssuedAt(new Date()).withIssuer("Demo").withExpiresAt(expirationDate).sign(Algorithm.HMAC256(this.secret));
+        return JWT.create().withSubject("User details").withClaim("login", login).withIssuedAt(new Date()).withIssuer("Demo").withExpiresAt(expirationDate).sign(Algorithm.HMAC256(secret));
     }
 
-    public String validateTokenAndRetrieveClaim(final String token) {
+    public String validateTokenAndRetrieveClaim(String token) {
 
-        final JWTVerifier verifier = JWT.require(Algorithm.HMAC256(this.secret)).withSubject("User details").withIssuer("Demo").build();
+        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret)).withSubject("User details").withIssuer("Demo").build();
 
-        final DecodedJWT jwt = verifier.verify(token);
+        DecodedJWT jwt = verifier.verify(token);
         return jwt.getClaim("login").asString();
     }
 }

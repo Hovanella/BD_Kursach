@@ -1,13 +1,10 @@
 package com.example.backendapp.Services.Implementaions;
 
 import com.example.backendapp.DTO.CommentDto;
-import com.example.backendapp.DTO.TrackDto;
 import com.example.backendapp.Entities.Author;
 import com.example.backendapp.Entities.Genre;
-import com.example.backendapp.Repositories.AuthorRepository;
-import com.example.backendapp.Repositories.CommentRepository;
-import com.example.backendapp.Repositories.GenreRepository;
-import com.example.backendapp.Repositories.TrackRepository;
+import com.example.backendapp.Entities.TrackWithUserRating;
+import com.example.backendapp.Repositories.*;
 import com.example.backendapp.Services.Interfaces.TrackService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +12,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.sql.Blob;
 import java.util.Collection;
 
 @Service
@@ -27,23 +25,27 @@ public class TrackServiceImpl implements TrackService {
     private final ModelMapper modelMapper;
     private final AuthorRepository authorRepository;
     private final TrackRepository trackRepository;
+    private final TrackWithUserRatingRepository trackWithUserRatingRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TrackServiceImpl(final CommentRepository commentRepository, final GenreRepository genreRepository, final ModelMapper modelMapper, final AuthorRepository authorRepository, TrackRepository trackRepository) {
+    public TrackServiceImpl(CommentRepository commentRepository, GenreRepository genreRepository, ModelMapper modelMapper, AuthorRepository authorRepository, final TrackRepository trackRepository, final TrackWithUserRatingRepository trackWithUserRatingRepository, final UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.genreRepository = genreRepository;
         this.modelMapper = modelMapper;
         this.authorRepository = authorRepository;
         this.trackRepository = trackRepository;
+        this.trackWithUserRatingRepository = trackWithUserRatingRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Collection<CommentDto> getCommentsByTrackId(final Long Id) {
+    public Collection<CommentDto> getCommentsByTrackId(Long Id) {
 
-        final var comments = this.commentRepository.getCommentsByTrackId(Id).stream().toList();
+        var comments = commentRepository.getCommentsByTrackId(Id).stream().toList();
 
         return comments.stream().map(comment -> {
-            final var newComment = this.modelMapper.map(comment, CommentDto.class);
+            var newComment = modelMapper.map(comment, CommentDto.class);
             newComment.setAuthorName(comment.getUser().getLogin());
             return newComment;
         }).toList();
@@ -51,67 +53,51 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public Collection<Genre> getTrackGenres() {
-        return this.genreRepository.findAll();
+        return genreRepository.findAll();
     }
 
     @Override
     public Collection<Author> getTrackAuthors() {
-        return this.authorRepository.findAll();
+        return authorRepository.findAll();
+    }
+
+
+    @Override
+    public Blob getTrackFileById(final Long id) {
+        return trackRepository.getTrackFile(id);
     }
 
     @Override
-    public Collection<TrackDto> getTracks(Long page, Long number) {
-
-        var trackCount = this.trackRepository.count();
-        var pageCount = trackCount / number == 0 ? trackCount / number : trackCount / number + 1;
-
-        if (page > pageCount) {
-            throw new IllegalArgumentException("Page number is greater than page count");
-        }
-
-
-        return this.trackRepository.findPageable(page * number, number).stream().map(track -> {
-            var newTrack = this.modelMapper.map(track, TrackDto.class);
-            newTrack.setAuthorName(track.getAuthor().getName());
-            newTrack.setGenreName(track.getGenre().getName());
-            return newTrack;
-        }).toList();
-
+    public String getTrackFileNameById(final Long id) {
+        return trackRepository.findById(id).get().getName();
     }
 
     @Override
-    public byte[] getTrackFileById(Long id) {
-        return this.trackRepository.findById(id).get().getTrackFile().getTrackFile();
-    }
+    @Transactional(readOnly = true)
+    public Collection<TrackWithUserRating> getTracksForUser(final Long page, final Long number, final String searchBy, final String searchValue, final String order, final Long minRate, final Long maxRate) {
 
-    @Override
-    public String getTrackFileNameById(Long id) {
-        return this.trackRepository.findById(id).get().getName();
-    }
-
-    @Override
-    public Collection<TrackDto> getTracksForUser(Long page, Long number) {
-        var currentUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+        final var currentUserDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
-        if (currentUser == null)
+        if (null == currentUserDetails)
             throw new BadCredentialsException("Not authorized");
-        var allTracks = new ArrayList<TrackDto>();
-      /*
+        final var userId = this.userRepository.findByLogin(currentUserDetails.getUsername()).getId();
 
-        trackRepository.findAllForUser().forEach(track -> allTracks.add(modelMapper.map(track, TrackDto.class)));
+        return this.trackWithUserRatingRepository.findTracksForUser(userId, page * number, number, searchBy, searchValue, order, minRate, maxRate);
+    }
 
-        var userRatings = new ArrayList<RatingDto>();
-        ratingRepository.findByUser(currentUser).forEach(rating -> userRatings.add(modelMapper.map(rating, RatingDto.class)));
 
-        for (var track : allTracks) {
-            for (var rating : userRatings) {
-                if (track.getId().equals(rating.getTrack().getId())) {
-                    track.setRating(rating.getMark());
-                }
-            }
-        }*/
+    @Override
+    @Transactional(readOnly = true)
+    public Long getTracksCount(String searchBy, String searchValue, Long minRate, Long maxRate) {
 
-        return allTracks;
+        final var currentUserDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        if (null == currentUserDetails)
+            throw new BadCredentialsException("Not authorized");
+        final var userId = this.userRepository.findByLogin(currentUserDetails.getUsername()).getId();
+
+        return trackRepository.getTrackCount(userId, searchBy, searchValue, minRate, maxRate);
     }
 
 }
+

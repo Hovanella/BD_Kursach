@@ -15,9 +15,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT ID FROM USERS WHERE LOGIN = :login", nativeQuery = true)
     Long GetUserIdByLogin(@Param("login") String login);
 
-    @Query(value = "SELECT ID FROM USERS WHERE LOGIN = :login AND PASSWORD = ENCRYPT_PASSWORD(:password)", nativeQuery = true)
+    @Query(value = "SELECT ID FROM USERS WHERE LOGIN = :login AND PASSWORD =:password", nativeQuery = true)
     Long GetUserIdByLoginAndPassword(String login, String password);
 
     @Procedure(procedureName = "REGISTER_USER")
     void saveUser(@Param("user_login") String login, @Param("user_password") String password, @Param("user_email") String email, @Param("user_role_id") Long id);
+
+    User findByLogin(String username);
 }

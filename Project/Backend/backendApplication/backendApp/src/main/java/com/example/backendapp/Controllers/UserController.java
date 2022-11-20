@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -25,7 +24,7 @@ public class UserController {
     private final JWTUtil jwtUtil;
 
     @Autowired
-    public UserController(final UserService userService, final AuthenticationManager authenticationManager, final JWTUtil jwtUtil) {
+    public UserController(UserService userService, AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
@@ -33,43 +32,37 @@ public class UserController {
 
 
     @PostMapping(value = "login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> login(@RequestBody final UnauthorizedUser unauthorizedUser) {
+    public ResponseEntity<String> login(@RequestBody UnauthorizedUser unauthorizedUser) {
 
-        try {
-            this.userService.login(unauthorizedUser);
-        } catch (final BadCredentialsException e) {
-            return new ResponseEntity<>("User with login " + unauthorizedUser.getLogin() + " doesn't exist", HttpStatus.BAD_REQUEST);
-        }
-
-        final String token = this.jwtUtil.generateToken(unauthorizedUser.getLogin());
+        userService.login(unauthorizedUser);
+        String token = jwtUtil.generateToken(unauthorizedUser.getLogin());
 
         return new ResponseEntity<>(token, HttpStatus.OK);
-
     }
 
     @PostMapping(value = "register", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> register(@RequestBody final UnregisteredUser unauthorizedUser) throws Exception {
+    public ResponseEntity<String> register(@RequestBody UnregisteredUser unauthorizedUser) throws Exception {
         try {
-            this.userService.register(unauthorizedUser);
-        } catch (final Exception e) {
+            userService.register(unauthorizedUser);
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        final String token = this.jwtUtil.generateToken(unauthorizedUser.getLogin());
+        String token = jwtUtil.generateToken(unauthorizedUser.getLogin());
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
 
     @GetMapping(value = "{userId}/tracks/{TrackId}/rating", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> getUserRating(@PathVariable("userId") final Long userId, @PathVariable("TrackId") final Long ratingId) {
+    public ResponseEntity<Integer> getUserRating(@PathVariable("userId") Long userId, @PathVariable("TrackId") Long ratingId) {
 
-        final var rating = this.userService.getUserTrackRating(userId, ratingId);
+        var rating = userService.getUserTrackRating(userId, ratingId);
         return new ResponseEntity<>(rating, HttpStatus.OK);
 
     }
 
     @GetMapping(value = "{userId}/playlists", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<PlaylistDTO>> getUserPlaylists(@PathVariable("userId") final Long userId) {
-        final var playlists = this.userService.getUserPlaylists(userId);
+    public ResponseEntity<Collection<PlaylistDTO>> getUserPlaylists(@PathVariable("userId") Long userId) {
+        var playlists = userService.getUserPlaylists(userId);
         return new ResponseEntity<>(playlists, HttpStatus.OK);
     }
 

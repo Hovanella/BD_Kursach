@@ -23,29 +23,29 @@ public class JWTFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public JWTFilter(final JWTUtil jwtUtil, final UserDetailsServiceImpl userDetailsService) {
+    public JWTFilter(JWTUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
 
     @Override
-    protected void doFilterInternal(final HttpServletRequest httpServletRequest, final HttpServletResponse httpServletResponse, final FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
 
 
-        final String authHeader = httpServletRequest.getHeader("Authorization");
+        String authHeader = httpServletRequest.getHeader("Authorization");
 
         if (null != authHeader && !authHeader.isBlank() && authHeader.startsWith("Bearer ")) {
-            final String jwt = authHeader.substring(7);
+            String jwt = authHeader.substring(7);
 
             if (jwt.isBlank()) {
                 httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST,
                         "Invalid JWT Token in Bearer Header");
             } else {
                 try {
-                    final String login = this.jwtUtil.validateTokenAndRetrieveClaim(jwt);
-                    final UserDetails userDetails = this.userDetailsService.loadUserByUsername(login);
+                    String login = jwtUtil.validateTokenAndRetrieveClaim(jwt);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(login);
 
-                    final UsernamePasswordAuthenticationToken authToken =
+                    UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(userDetails,
                                     userDetails.getPassword(),
                                     userDetails.getAuthorities());
@@ -53,9 +53,10 @@ public class JWTFilter extends OncePerRequestFilter {
                     if (null == SecurityContextHolder.getContext().getAuthentication()) {
                         SecurityContextHolder.getContext().setAuthentication(authToken);
                     }
-                } catch (final JWTVerificationException exc) {
+                } catch (JWTVerificationException exc) {
                     httpServletResponse.sendError(HttpServletResponse.SC_BAD_REQUEST,
                             "Invalid JWT Token");
+                    return;
                 }
             }
         }

@@ -7,10 +7,12 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
+
 @Entity
 @Getter
 @Setter
 @Table(name = "TRACKS")
+
 public class Track {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

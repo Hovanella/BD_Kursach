@@ -1,0 +1,38 @@
+
+
+.trackItem{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4em;
+    margin: 0.8em;
+    border-radius: 0.5em;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+
+}
+.trackHeaders{
+    width: 100%;
+
+}
+.audioPlayer{
+    margin-top: 0.5em;
+    width: 100%;
+}
+
+.downloadTrackLink{
+    margin-top: 0.5em;
+}
+
+.downloadTrackImage{
+    width:20px;
+    height: 20px;
+    align-self: flex-end;
+}
+
+
+
+
+
+

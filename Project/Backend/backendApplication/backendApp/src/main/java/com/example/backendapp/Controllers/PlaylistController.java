@@ -22,15 +22,15 @@ public class PlaylistController {
     private final PlaylistService playlistService;
 
     @Autowired
-    public PlaylistController(PlaylistService playlistService) {
+    public PlaylistController(final PlaylistService playlistService) {
         this.playlistService = playlistService;
     }
 
 
     @GetMapping(value = "{id}/tracks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<TrackDto>> getPlaylistTracksById(@PathVariable final Long id) {
+    public ResponseEntity<Collection<TrackDto>> getPlaylistTracksById(@PathVariable Long id) {
 
-        return new ResponseEntity<>(this.playlistService.getPlaylistTracksById(id), HttpStatus.OK);
+        return new ResponseEntity<>(playlistService.getPlaylistTracksById(id), HttpStatus.OK);
     }
 
 
