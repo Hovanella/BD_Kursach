@@ -13,15 +13,15 @@ const Home = () => {
     const [searchValue, setSearchValue] = useState("");
     const [filterType, setFilterType] = useState("name");
     const [order, setOrder] = useState("ascending");
-    const [ratingRangeValue, setRatingRangeValue] = useState([0, 11]);
+    const [ratingRangeValue, setRatingRangeValue] = useState([1, 11]);
     const [currentPage, setCurrentPage] = useState(0);
     const [content, setContent] = useState([]);
     const [trackCount, setTrackCount] = useState(0);
 
     const TracksPerPage = 10;
 
-    const {refetch:refetchTrackCount} = useQuery(["getTracksCount"], () => TrackService.getTrackCount(filterType, searchValue, ratingRangeValue[0], ratingRangeValue[1]));
-    const {refetch:refetchTracks} = useQuery(["getTracks"], () => TrackService.getTracksPage(currentPage, TracksPerPage, filterType, searchValue, order, ratingRangeValue[0], ratingRangeValue[1]));
+    const {refetch:refetchTrackCount} = useQuery(["getTracksCount"], () => TrackService.getTrackCount(filterType, searchValue, ratingRangeValue[0]-1, ratingRangeValue[1]-1));
+    const {refetch:refetchTracks} = useQuery(["getTracks"], () => TrackService.getTracksPage(currentPage, TracksPerPage, filterType, searchValue, order, ratingRangeValue[0]-1, ratingRangeValue[1]-1));
 
 
 

@@ -6,9 +6,6 @@ import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 
-/**
- * Mapping for DB view
- */
 
 @Immutable
 @Getter

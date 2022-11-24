@@ -11,7 +11,7 @@ const GetAuthorByName = (name) => {
     return axios.get(`${API_URL}GetAuthor/${name}`, { headers: authHeader() });
 }
 const getAllAuthors = () => {
-    return axios.get(`${API_URL}GetAllAuthors`, { headers: authHeader() });
+    return axios.get(`${API_URL}`, { headers: authHeader() });
 }
 
 const AuthorService = {

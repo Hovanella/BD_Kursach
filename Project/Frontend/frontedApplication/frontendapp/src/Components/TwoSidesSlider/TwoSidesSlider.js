@@ -9,8 +9,6 @@ export const TwoSidesSlider = ({ratingRangeValue, setRatingRangeValue}) => {
 
 
     const marks = {
-
-        0: '-',
         1: '0',
         2: '1',
         3: '2',
@@ -24,14 +22,13 @@ export const TwoSidesSlider = ({ratingRangeValue, setRatingRangeValue}) => {
         11: '10',
     }
 
-
     const onSliderChange = (value) => {
         setRatingRangeValue(value);
     };
 
 
     return (
-        <Slider range allowCross={false} dots={true} min={0} max={11} marks={marks} value={ratingRangeValue}
+        <Slider className="rc-slider" range allowCross={false} dots={true} min={1} max={11} marks={marks} value={ratingRangeValue}
                 onChange={onSliderChange}/>
     )
 }

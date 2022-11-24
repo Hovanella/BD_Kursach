@@ -52,18 +52,24 @@ public class UserController {
     }
 
 
-    @GetMapping(value = "{userId}/tracks/{TrackId}/rating", produces = MediaType.APPLICATION_JSON_VALUE)
+   /* @GetMapping(value = "{userId}/tracks/{TrackId}/rating", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> getUserRating(@PathVariable("userId") Long userId, @PathVariable("TrackId") Long ratingId) {
 
         var rating = userService.getUserTrackRating(userId, ratingId);
         return new ResponseEntity<>(rating, HttpStatus.OK);
 
-    }
+    }*/
 
     @GetMapping(value = "{userId}/playlists", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<PlaylistDTO>> getUserPlaylists(@PathVariable("userId") Long userId) {
         var playlists = userService.getUserPlaylists(userId);
         return new ResponseEntity<>(playlists, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "is-admin", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Boolean> isAdmin() {
+        return new ResponseEntity<>(userService.isAdmin(), HttpStatus.OK);
     }
 
 

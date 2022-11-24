@@ -26,16 +26,17 @@ const Login = () => {
     const handleLogin = (e) => {
             AuthenticationService.login(...getValues(["login","password"])).then(
                 () => {
+                    AuthenticationService.isAdmin().then(
+                        (response) => {
+                           /* if (response.data === true)
+                                navigate("/admin");
+                            else
+                                navigate("/home");*/
 
-                    //TODO navigate according to role
+                            navigate("/home");
+                            window.location.reload();
+                        });
 
-                   /* if () {
-                       navigate("/admin");
-                    }else{
-                        navigate("/home");
-                    }*/
-                    navigate("/home");
-                    window.location.reload();
                 }
             );
         };

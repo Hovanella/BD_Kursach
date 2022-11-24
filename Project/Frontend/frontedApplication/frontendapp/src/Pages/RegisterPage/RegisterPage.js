@@ -10,7 +10,7 @@ const Register = () => {
 
         const navigator = useNavigate();
         const [logins, setLogins] = useState(["login"]);
-        const {register, handleSubmit, formState: {errors},getValues,getFieldState} = useForm();
+        const {register, handleSubmit, formState: {errors}, getValues, getFieldState} = useForm();
 
         useEffect(() => {
 
@@ -23,9 +23,19 @@ const Register = () => {
         }, []);
 
         const handleRegister = (e) => {
-            AuthenticationService.register(...getValues(["login","password","email"])).then(
+            AuthenticationService.register(...getValues(["login", "password", "email"])).then(
                 () => {
-                    navigator("/home");
+                    AuthenticationService.isAdmin().then(
+                        (response) => {
+                            console.log(response.data);
+                            if (response.data === true)
+                                navigator("/admin");
+                            else
+                                navigator("/home");
+                        }
+                    )
+
+
                 },
                 (error) => {
                 }

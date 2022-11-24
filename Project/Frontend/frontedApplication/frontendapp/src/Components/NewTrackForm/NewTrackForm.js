@@ -122,7 +122,7 @@ export const NewTrackForm = () => {
         <form datatype="multipart/form-data" method="post" onSubmit={onSubmitHandler} className="newTrackForm">
 
             <input ref={file} type="file" id="file" className="fileInput" onChange={fileChangeHandler}
-                   accept="audio/*"/>
+                   accept="audio/mp3"/>
             <label className="fileNameLabel" htmlFor="file">
                 <span className="fileNameSpan"> {fileName || "Choose a File"}</span>
             </label>

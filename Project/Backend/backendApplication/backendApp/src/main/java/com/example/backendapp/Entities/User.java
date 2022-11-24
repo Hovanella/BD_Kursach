@@ -7,6 +7,17 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@NamedStoredProcedureQueries(
+        @NamedStoredProcedureQuery(
+                name = "GET_USER_BY_ID",
+                procedureName = "GET_USER_BY_ID",
+                resultClasses = User.class,
+                parameters = {
+                        @StoredProcedureParameter(mode = ParameterMode.IN, name = "user_id_", type = Long.class),
+                        @StoredProcedureParameter(mode = ParameterMode.REF_CURSOR, name = "user_out", type = void.class)
+                }
+        )
+)
 @Entity
 @Setter
 @Getter

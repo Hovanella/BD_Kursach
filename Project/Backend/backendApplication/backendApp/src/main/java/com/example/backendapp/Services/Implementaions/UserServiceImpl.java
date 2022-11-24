@@ -14,8 +14,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -41,14 +44,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findUserById(Long id) {
         User userById = userRepository.findUserById(id);
         return userById;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void login(UnauthorizedUser unauthorizedUser) {
-        
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(unauthorizedUser.getLogin(), unauthorizedUser.getPassword());
 
         try {
@@ -60,6 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void register(UnregisteredUser user) {
 
         if (null != this.userRepository.GetUserIdByLogin(user.getLogin())) {
@@ -73,16 +79,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public Integer getUserTrackRating(Long userId, Long ratingId) {
-        var rate = ratingRepository.getUserTrackRating(userId, ratingId);
-        if (null == rate) {
-            return -1;
-        }
-        return rate;
-    }
 
     @Override
+    @Transactional(readOnly = true)
     public Collection<PlaylistDTO> getUserPlaylists(Long userId) {
 
         var PlaylistDTOs = playlistRepository.getUserPlaylists(userId).stream().map(playlist -> {
@@ -92,6 +91,18 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
 
         return PlaylistDTOs;
+    }
+
+    @Override
+    public Boolean isAdmin() {
+        final var currentUserDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        if (null == currentUserDetails)
+            throw new BadCredentialsException("Not authorized");
+        final var userRole = currentUserDetails.getAuthorities().toArray()[0].toString();
+
+        return userRole.equals("ROLE_ADMIN");
+
     }
 
 }

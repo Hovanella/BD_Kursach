@@ -10,9 +10,8 @@ const getTracksPage = async (page = 0, number, searchBy = 'name', searchValue = 
     return response.data;
 };
 
-const postOrUpdateRating = (mark, trackId) => {
-    const login = JSON.parse(localStorage.getItem("user")).login;
-    return axios.post(`${API_URL}AddOrUpdateRating`, {mark, login, trackId}, {headers: authHeader()});
+const setTrackRating = (rating, trackId) => {
+    return axios.post(`${API_URL}${trackId}/set-rating`, {rating}, {headers: authHeader()});
 }
 
 const postTrack = (genreId, authorId, name, path) => {
@@ -32,7 +31,7 @@ const getTrackCount = async (searchBy = 'name', searchValue = '', minRate = 0, m
 
 const TrackService = {
     getTracksPage,
-    postOrUpdateRating,
+    setTrackRating,
     postTrack,
     CopyTrackInAudio,
     getTrackCount

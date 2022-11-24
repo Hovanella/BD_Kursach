@@ -16,7 +16,7 @@ const GetGenreByName = (name) => {
 }
 
 const getAllGenres = () => {
-    return axios.get(`${API_URL}GetAllGenres`, {headers: authHeader()});
+    return axios.get(`${API_URL}`, {headers: authHeader()});
 }
 
 const GenreService = {

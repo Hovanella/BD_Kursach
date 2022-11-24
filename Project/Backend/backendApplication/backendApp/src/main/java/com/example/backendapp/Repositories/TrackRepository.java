@@ -11,6 +11,7 @@ import java.sql.Blob;
 @Repository
 public interface TrackRepository extends JpaRepository<Track, Long> {
 
+
     @Procedure(procedureName = "GET_TRACK_COUNT", outputParameterName = "track_count_")
     long getTrackCount(@Param("user_id_") Long userId, @Param("search_by_") String searchBy, @Param("search_value_") String searchValue, @Param("min_rate_") Long minRate, @Param("max_rate_") Long maxRate);
 

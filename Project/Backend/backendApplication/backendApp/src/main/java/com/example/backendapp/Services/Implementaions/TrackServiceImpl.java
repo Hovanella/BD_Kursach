@@ -1,8 +1,7 @@
 package com.example.backendapp.Services.Implementaions;
 
 import com.example.backendapp.DTO.CommentDto;
-import com.example.backendapp.Entities.Author;
-import com.example.backendapp.Entities.Genre;
+import com.example.backendapp.Entities.Rating;
 import com.example.backendapp.Entities.TrackWithUserRating;
 import com.example.backendapp.Repositories.*;
 import com.example.backendapp.Services.Interfaces.TrackService;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Blob;
 import java.util.Collection;
 
+
 @Service
 public class TrackServiceImpl implements TrackService {
 
@@ -27,9 +27,10 @@ public class TrackServiceImpl implements TrackService {
     private final TrackRepository trackRepository;
     private final TrackWithUserRatingRepository trackWithUserRatingRepository;
     private final UserRepository userRepository;
+    private final RatingRepository ratingRepository;
 
     @Autowired
-    public TrackServiceImpl(CommentRepository commentRepository, GenreRepository genreRepository, ModelMapper modelMapper, AuthorRepository authorRepository, final TrackRepository trackRepository, final TrackWithUserRatingRepository trackWithUserRatingRepository, final UserRepository userRepository) {
+    public TrackServiceImpl(CommentRepository commentRepository, GenreRepository genreRepository, ModelMapper modelMapper, AuthorRepository authorRepository, final TrackRepository trackRepository, final TrackWithUserRatingRepository trackWithUserRatingRepository, final UserRepository userRepository, RatingRepository ratingRepository) {
         this.commentRepository = commentRepository;
         this.genreRepository = genreRepository;
         this.modelMapper = modelMapper;
@@ -37,6 +38,7 @@ public class TrackServiceImpl implements TrackService {
         this.trackRepository = trackRepository;
         this.trackWithUserRatingRepository = trackWithUserRatingRepository;
         this.userRepository = userRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     @Override
@@ -49,16 +51,6 @@ public class TrackServiceImpl implements TrackService {
             newComment.setAuthorName(comment.getUser().getLogin());
             return newComment;
         }).toList();
-    }
-
-    @Override
-    public Collection<Genre> getTrackGenres() {
-        return genreRepository.findAll();
-    }
-
-    @Override
-    public Collection<Author> getTrackAuthors() {
-        return authorRepository.findAll();
     }
 
 
@@ -99,5 +91,22 @@ public class TrackServiceImpl implements TrackService {
         return trackRepository.getTrackCount(userId, searchBy, searchValue, minRate, maxRate);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public TrackWithUserRating setTrackRating(Long TrackId, Long rating) {
+        final var currentUserDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        if (null == currentUserDetails)
+            throw new BadCredentialsException("Not authorized");
+        final var userId = this.userRepository.findByLogin(currentUserDetails.getUsername()).getId();
+
+        Rating ratingForTrack = ratingRepository.getRatingForTrackFromUser(userId, TrackId);
+
+        if (null == ratingForTrack)
+            return trackWithUserRatingRepository.setTrackRating(TrackId, userId, rating);
+        else
+            return trackWithUserRatingRepository.updateTrackRating(ratingForTrack.getId(), rating);
+
+    }
 }
 

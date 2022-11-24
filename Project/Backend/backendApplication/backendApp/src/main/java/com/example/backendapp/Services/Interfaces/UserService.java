@@ -15,8 +15,8 @@ public interface UserService {
 
     void register(UnregisteredUser User);
 
-    Integer getUserTrackRating(Long userId, Long ratingId);
 
     Collection<PlaylistDTO> getUserPlaylists(Long userId);
 
+    Boolean isAdmin();
 }
