@@ -1,12 +1,11 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import React from "react";
 import "./NewTrackForm.css"
-import {AuthorSelect} from "../AuthorSelect/AuthorSelect";
-import {GenreSelect} from "./GenreSelect";
+import { AuthorSelect } from "../AuthorSelect/AuthorSelect";
+import { GenreSelect } from "./GenreSelect";
 import AuthorService from "../../Services/AuthorService";
 import GenreService from "../../Services/GenreService";
 import TrackService from "../../Services/TrackService";
-
 
 
 export const NewTrackForm = () => {
@@ -39,12 +38,11 @@ export const NewTrackForm = () => {
 
     const fileChangeHandler = async (event) => {
 
-        const pathToFile = file.current.value ;
+        const pathToFile = file.current.value;
 
         const pathToFileSplited = pathToFile.split("\\");
 
         const fileName = pathToFileSplited[pathToFileSplited.length - 1];
-
 
 
         setFileName(fileName);
@@ -80,40 +78,36 @@ export const NewTrackForm = () => {
     const onSubmitHandler = async (e) => {
         e.preventDefault();
 
-        let genreId, authorId, name, path, absolutePath;
+        let genreId, authorId, name;
 
         name = trackName.current.value;
-        absolutePath = file.current.value;
-        path = fileName;
+
+        try {
+            if (newAuthorInputEnabled) {
+                const response = await AuthorService.AddAuthor(newAuthor.current.value);
+                authorId = response.data.id;
+            } else {
+                authorId = existingAuthor.current.value;
+            }
+
+            if (newGenreInputEnabled) {
+                const response = await GenreService.AddGenre(newGenre.current.value);
+                genreId = response.data.id;
+            } else {
+                genreId = existingGenre.current.value;
+            }
+            const formData = new FormData();
+            formData.append("file", file.current.files[0]);
 
 
-        if (newAuthorInputEnabled) {
-            await AuthorService.AddAuthor(newAuthor.current.value).then((response) => {
-                    authorId = response.data.id;
-                }
-            );
-        } else {
-
-            authorId = existingAuthor.current.value;
-
+            const trackFileId = await TrackService.postTrackFile(formData);
+            const trackFIleIdTexted = await trackFileId.text();
+            await TrackService.postTrack(genreId, authorId, name, trackFIleIdTexted);
+            alert("Track added successfully");
+        } catch (e) {
+            alert("Error while adding track");
         }
 
-
-        if (newGenreInputEnabled) {
-            await GenreService.AddGenre(newGenre.current.value).then((response) => {
-                    genreId = response.data.id;
-                }
-            );
-        } else {
-            genreId = existingGenre.current.value;
-        }
-
-
-        await TrackService.postTrack(genreId, authorId, name, path, absolutePath);
-
-        const formData = new FormData();
-        formData.append("file", file.current.files[0]);
-        await TrackService.CopyTrackInAudio(formData);
 
     }
 

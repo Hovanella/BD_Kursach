@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -24,7 +26,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findUserById(userRepository.GetUserIdByLogin(username));
+        User user = null;
+        try {
+            user = userRepository.findUserById(userRepository.GetUserIdByLogin(username));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         if (null == user) {
             throw new UsernameNotFoundException("User not found");

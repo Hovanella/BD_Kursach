@@ -1,0 +1,28 @@
+.link{
+    color: coral;
+}
+
+.disabledLink{
+    color: whitesmoke;
+    text-decoration: none;
+    cursor: default;
+}
+.linkWrapper{
+    width: 50%;
+    height: 10vh;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.statisticHeader{
+    text-align: center;
+    color: coral;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 1em 0 20px;
+}
+.wrapper{
+
+}
+

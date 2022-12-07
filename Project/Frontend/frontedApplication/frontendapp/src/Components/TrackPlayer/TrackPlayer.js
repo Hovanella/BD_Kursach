@@ -2,12 +2,10 @@ import StarRatings from "react-star-ratings/build/star-ratings";
 import TrackService from "../../Services/TrackService";
 import { useEffect, useState } from "react";
 import React from "react";
-import "./TrackPlayer.css"
-import { useQuery } from "react-query";
-import { Comments } from "../Comments/Comments";
+import "./TrackPlayer.css";
 
 
-export const TrackPlayer = ({item, changeRating}) => {
+export const TrackPlayer = ({item}) => {
 
     const changeRatingHandler = async (rating) => {
         await TrackService.setTrackRating(rating, item.id).then((track) => {
@@ -20,7 +18,7 @@ export const TrackPlayer = ({item, changeRating}) => {
     const source = `http://localhost:8089/tracks/${item.id}/file`;
 
 
-    const [rating, setRating] = useState(item.rate === -1 ? 0 : item.rate);
+    const [rating, setRating] = useState(item.rate === null ? 0 : item.rate);
 
     return (
         <li className="trackItem" key={item.id}>
@@ -39,7 +37,6 @@ export const TrackPlayer = ({item, changeRating}) => {
                 <source src={source} type="audio/mpeg"/>
             </audio>}
 
-            <Comments/>
         </li>
     );
 

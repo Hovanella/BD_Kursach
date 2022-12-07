@@ -1,0 +1,29 @@
+
+table{
+    border: 1px solid #efefef;
+    table-layout: fixed;
+    width: 70%;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    border-radius: 5px;
+    overflow: hidden;
+}
+table th {
+    font-weight: bold;
+    padding: 5px;
+    background: #efefef;
+    border: 1px solid /*#dddddd*/ #7f6332;
+}
+table td{
+    padding: 5px 10px;
+    border: 1px solid #eee;
+    text-align: left;
+}
+table tbody tr:nth-child(odd){
+    background: darkgrey;
+}
+table tbody tr:nth-child(even){
+    background: orange;
+}
+
+

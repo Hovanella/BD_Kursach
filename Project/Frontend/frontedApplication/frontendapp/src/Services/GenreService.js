@@ -5,7 +5,7 @@ import authHeader from "./Headers/authHeader";
 const API_URL = "http://localhost:8089/genres/";
 
 const AddGenre = (name) => {
-    return axios.post(`${API_URL}AddGenre`, {name}, {headers: authHeader()});
+    return axios.post(`${API_URL}`, {name}, {headers: authHeader()});
 }
 
 const GetGenreByName = (name) => {

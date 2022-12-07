@@ -14,17 +14,25 @@ const setTrackRating = (rating, trackId) => {
     return axios.post(`${API_URL}${trackId}/set-rating`, {rating}, {headers: authHeader()});
 }
 
-const postTrack = (genreId, authorId, name, path) => {
-    return axios.post(`${API_URL}AddTrack`, {genreId, authorId, name, path}, {headers: authHeader()});
+const postTrack = (genreId, authorId, name, trackFileId) => {
+    console.log("trackFileId " + trackFileId + " genreId " + genreId + " authorId " + authorId + " name " + name);
+    return axios.post(`${API_URL}create`, {name, genreId, authorId, trackFileId}, {headers: authHeader()});
 }
 
-const CopyTrackInAudio = async (trackId) => {
-    const response =  await axios.post(`${API_URL}${trackId}/file`, {}, {headers:authHeader()});
-    console.log(response.data);
-    return response.data;
+const postTrackFile = async (formData) => {
+
+    const options = {
+        method: "POST",
+        body: formData,
+        headers: authHeader(),
+        accept: "text/plain"
+    }
+    return await fetch(`${API_URL}files`, options);
+
 }
 
 const getTrackCount = async (searchBy = 'name', searchValue = '', minRate = 0, maxRate = 10) => {
+    console.log("searchValue " + searchValue);
     const response = await axios.get(`${API_URL}count?search-by=${searchBy}&search-value=${searchValue}&min-rate=${minRate}&max-rate=${maxRate}`, {headers: authHeader()});
     return response.data;
 }
@@ -33,7 +41,7 @@ const TrackService = {
     getTracksPage,
     setTrackRating,
     postTrack,
-    CopyTrackInAudio,
+    postTrackFile,
     getTrackCount
 };
 export default TrackService;

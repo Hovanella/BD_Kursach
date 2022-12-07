@@ -17,12 +17,18 @@
 }
 
 .container {
+    min-height: 720px;
     background-image: url("../../../public/music69.jpg");
-    background-size:100% 100%;
-    width: 100%;
-    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     display: flex;
     flex-direction: column;
     align-items: center;
     /*  justify-content: center;*/
 }
+
+li{
+    height: 230px;
+}
+

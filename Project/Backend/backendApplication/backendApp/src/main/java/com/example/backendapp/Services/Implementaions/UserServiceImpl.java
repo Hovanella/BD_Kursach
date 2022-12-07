@@ -1,6 +1,5 @@
 package com.example.backendapp.Services.Implementaions;
 
-import com.example.backendapp.DTO.PlaylistDTO;
 import com.example.backendapp.DTO.UnauthorizedUser;
 import com.example.backendapp.DTO.UnregisteredUser;
 import com.example.backendapp.Entities.User;
@@ -20,8 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.sql.SQLException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -45,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User findUserById(Long id) {
+    public User findUserById(Long id) throws SQLException {
         User userById = userRepository.findUserById(id);
         return userById;
     }
@@ -66,7 +64,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public void register(UnregisteredUser user) {
+    public void register(UnregisteredUser user) throws SQLException {
+
 
         if (null != this.userRepository.GetUserIdByLogin(user.getLogin())) {
             throw new IllegalArgumentException("User with login " + user.getLogin() + " already exists");
@@ -79,19 +78,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-    @Override
-    @Transactional(readOnly = true)
-    public Collection<PlaylistDTO> getUserPlaylists(Long userId) {
-
-        var PlaylistDTOs = playlistRepository.getUserPlaylists(userId).stream().map(playlist -> {
-            PlaylistDTO playlistDTO = modelMapper.map(playlist, PlaylistDTO.class);
-            playlistDTO.setAuthorName(playlist.getUser().getLogin());
-            return playlistDTO;
-        }).collect(Collectors.toList());
-
-        return PlaylistDTOs;
-    }
 
     @Override
     public Boolean isAdmin() {

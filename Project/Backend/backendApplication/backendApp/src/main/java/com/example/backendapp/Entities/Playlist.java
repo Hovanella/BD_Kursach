@@ -19,16 +19,11 @@ public class Playlist {
     @Column(name = "NAME", nullable = false, length = 30)
     private String name;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    @Column(name = "USER_ID", nullable = false)
+    private Long userId;
 
     @ManyToMany(mappedBy = "playlists")
     private Collection<Track> tracks;
-
-
-
-
 
 
 }

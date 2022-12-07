@@ -1,0 +1,110 @@
+.container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
+}
+.playlistsButtonSection{
+    width: 20%;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+}
+.playlistSongsSection{
+    height: max-content;
+    width: 35%;
+}
+.songsSearchSection{
+    top: 0;
+    align-self: flex-start;
+    position: sticky;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    width: 40%;
+    height: 90vh;
+}
+.createNewPlaylist{
+    background-color: silver;
+    border: 1px solid black;
+    width: 100%;
+    height: 10vh;
+    margin-bottom: 1rem;
+}
+.playlist{
+    border-radius: 35px;
+    background-color: deepskyblue;
+    border: 1px solid black;
+    width: 91%;
+    height: 12vh;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.playlistsList{
+    width: 100%;
+    height: 100vh;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    overflow: auto;
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+}
+.playlistButton {
+    border-radius: 35px;
+    width: 100%;
+    height: 12vh;
+}
+.playlistButton:hover{
+    background-color: silver;
+}
+.selectedPlaylist{
+    background-color: silver;
+}
+
+.playlistButton:active{
+    background-color: #3f3f6f;
+}
+.link{
+    color: deepskyblue;
+}
+
+.disabledLink{
+    color: whitesmoke;
+    text-decoration: none;
+    cursor: default;
+}
+.linkWrapper{
+    width: 50%;
+    height: 10vh;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.deleteButton{
+    background-color: #4b3c22;
+    border: 1px solid black;
+    width: 50%;
+    height: 10%;
+    margin: 0 auto;
+}
+.scrollable{
+    height: 100vh;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    overflow: auto;
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+}
+.closedForm{
+    display: none;
+}
+.openForm{
+    display: block;
+}

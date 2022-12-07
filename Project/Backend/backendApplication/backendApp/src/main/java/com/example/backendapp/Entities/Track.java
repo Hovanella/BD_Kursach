@@ -22,13 +22,12 @@ public class Track {
     @Column(name = "NAME", nullable = false, length = 30)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "GENRE_ID", nullable = false)
-    private Genre genre;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "AUTHOR_ID", nullable = false)
-    private Author author;
+    @Column(name = "GENRE_ID", nullable = false)
+    private Long genreId;
+
+    @Column(name = "AUTHOR_ID", nullable = false)
+    private Long authorId;
 
     @ManyToMany
     @JoinTable(name = "PLAYLIST_TRACKS",
@@ -36,9 +35,9 @@ public class Track {
             inverseJoinColumns = @JoinColumn(name = "playlist_id"))
     private Collection<Playlist> playlists = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "TRACK_FILE_ID", nullable = false)
-    private TrackFile trackFile;
+
+    @Column(name = "TRACK_FILE_ID", nullable = false)
+    private Long trackFileId;
 
 
 }

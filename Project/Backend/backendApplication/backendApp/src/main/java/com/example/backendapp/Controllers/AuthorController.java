@@ -2,12 +2,12 @@ package com.example.backendapp.Controllers;
 
 import com.example.backendapp.Entities.Author;
 import com.example.backendapp.Services.Interfaces.AuthorService;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 @RestController
@@ -22,7 +22,14 @@ public class AuthorController {
     }
 
     @GetMapping(value = "/", produces = "application/json")
-    public Collection<Author> getAuthors() {
+    public Collection<Author> getAuthors() throws SQLException {
         return authorService.getAuthors();
+    }
+
+    @PostMapping(value = "/", produces = "application/json")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Author addAuthor(@RequestBody JsonNode jsonNode) throws SQLException {
+        var name = jsonNode.get("name").asText();
+        return authorService.addAuthor(name);
     }
 }

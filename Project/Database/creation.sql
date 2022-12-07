@@ -30,6 +30,66 @@ temporary tablespace temp
 quota unlimited on kursach;
 
 grant all privileges to kursach_admin;
+grant create session to kursach_admin;
+grant create user to kursach_admin;
+
+--unauthorized access to the database
+create user unauthorized_user identified by qwerty
+default tablespace kursach
+temporary tablespace temp
+quota unlimited on kursach;
+
+grant connect to unauthorized_user;
+grant execute on GET_USER_BY_ID to unauthorized_user;
+grant execute on GET_USER_ID_BY_LOGIN to unauthorized_user;
+grant execute on REGISTER_USER to unauthorized_user;
+
+
+--admin
+create user admin  identified by admin
+default tablespace kursach
+temporary tablespace temp
+quota unlimited on kursach;
+
+grant connect to admin;
+grant execute on CREATE_TRACK_FILE to admin;
+grant execute on CREATE_TRACK to admin;
+grant execute on ADD_AUTHOR to admin;
+grant execute on ADD_GENRE to admin;
+grant execute on GET_GENRES to admin;
+grant execute on GET_AUTHORS to admin;
+
+--client
+create user client identified by client
+default tablespace kursach
+temporary tablespace temp
+quota unlimited on kursach;
+
+grant connect to client;
+grant execute on GET_USER_BY_LOGIN to client;
+grant execute on GET_PLAYLISTS to client;
+grant execute on GET_PLAYLIST_BY_ID to client;
+grant execute on GET_PLAYLIST_TRACKS_FOR_USER to client;
+grant execute on ADD_TRACK_TO_PLAYLIST to client;
+grant execute on DELETE_TRACK_FROM_PLAYLIST to client;
+grant execute on CREATE_PLAYLIST to client;
+grant execute on GET_TRACKS_FOR_USER to client;
+grant execute on SET_TRACK_RATING to client;
+grant execute on UPDATE_TRACK_RATING to client;
+grant execute on GET_TRACK_FILE to client;
+grant execute on GET_TRACK_BY_ID to client;
+grant execute on GET_TRACK_COUNT to client;
+grant execute on GET_TRACK_FILE to client;
+grant execute on GET_RATING_FOR_TRACK_FROM_USER to client;
+grant execute on TRACKS_TO_JSON  to client;
+
+
+
+
+
+--grant procedure GET_USER_ID to unauthorized_user;
+
+
 
 
 --drop all tables

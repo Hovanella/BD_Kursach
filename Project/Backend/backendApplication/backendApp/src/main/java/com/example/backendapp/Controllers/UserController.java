@@ -1,6 +1,5 @@
 package com.example.backendapp.Controllers;
 
-import com.example.backendapp.DTO.PlaylistDTO;
 import com.example.backendapp.DTO.UnauthorizedUser;
 import com.example.backendapp.DTO.UnregisteredUser;
 import com.example.backendapp.Security.JWTUtil;
@@ -11,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
 
 @RestController
 @RequestMapping("/users/")
@@ -49,21 +46,6 @@ public class UserController {
         }
         String token = jwtUtil.generateToken(unauthorizedUser.getLogin());
         return new ResponseEntity<>(token, HttpStatus.OK);
-    }
-
-
-   /* @GetMapping(value = "{userId}/tracks/{TrackId}/rating", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Integer> getUserRating(@PathVariable("userId") Long userId, @PathVariable("TrackId") Long ratingId) {
-
-        var rating = userService.getUserTrackRating(userId, ratingId);
-        return new ResponseEntity<>(rating, HttpStatus.OK);
-
-    }*/
-
-    @GetMapping(value = "{userId}/playlists", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<PlaylistDTO>> getUserPlaylists(@PathVariable("userId") Long userId) {
-        var playlists = userService.getUserPlaylists(userId);
-        return new ResponseEntity<>(playlists, HttpStatus.OK);
     }
 
 

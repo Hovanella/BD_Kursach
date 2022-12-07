@@ -1,0 +1,17 @@
+.link{
+    color: deepskyblue;
+}
+
+.disabledLink{
+    color: whitesmoke;
+    text-decoration: none;
+    cursor: default;
+}
+.linkWrapper{
+    width: 50%;
+    height: 10vh;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}

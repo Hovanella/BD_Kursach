@@ -1,0 +1,10 @@
+.link{
+    color: coral;
+}
+
+.disabledLink{
+    color: whitesmoke;
+    text-decoration: none;
+    cursor: default;
+}
+

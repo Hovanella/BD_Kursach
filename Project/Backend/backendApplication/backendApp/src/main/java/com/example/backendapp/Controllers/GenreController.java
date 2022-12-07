@@ -3,12 +3,12 @@ package com.example.backendapp.Controllers;
 
 import com.example.backendapp.Entities.Genre;
 import com.example.backendapp.Services.Interfaces.GenreService;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 @RestController
@@ -24,7 +24,15 @@ public class GenreController {
     }
 
     @GetMapping(value = "/", produces = "application/json")
-    public Collection<Genre> getGenres() {
+    public Collection<Genre> getGenres() throws SQLException {
         return genreService.getGenres();
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping(value = "/", produces = "application/json")
+    public Genre addGenre(@RequestBody JsonNode jsonNode) throws SQLException {
+        var name = jsonNode.get("name").asText();
+        return genreService.addGenre(name);
+    }
+
 }

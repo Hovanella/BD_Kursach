@@ -5,6 +5,7 @@ import "./HomePage.css"
 import { Search } from "../../Components/Search/Search";
 import { NavigationArrows } from "../../Components/NavigationArrows/NavigationArrows";
 import { useQuery } from "react-query";
+import styles from "./HomePage.module.css";
 
 
 const Home = () => {
@@ -20,11 +21,8 @@ const Home = () => {
 
     const TracksPerPage = 10;
 
-    const {refetch:refetchTrackCount} = useQuery(["getTracksCount"], () => TrackService.getTrackCount(filterType, searchValue, ratingRangeValue[0]-1, ratingRangeValue[1]-1));
-    const {refetch:refetchTracks} = useQuery(["getTracks"], () => TrackService.getTracksPage(currentPage, TracksPerPage, filterType, searchValue, order, ratingRangeValue[0]-1, ratingRangeValue[1]-1));
-
-
-
+    const {refetch: refetchTrackCount} = useQuery(["getTracksCount"], () => TrackService.getTrackCount(filterType, searchValue, ratingRangeValue[0] - 1, ratingRangeValue[1] - 1));
+    const {refetch: refetchTracks} = useQuery(["getTracks"], () => TrackService.getTracksPage(currentPage, TracksPerPage, filterType, searchValue, order, ratingRangeValue[0] - 1, ratingRangeValue[1] - 1));
 
 
     useEffect(() => {
@@ -35,7 +33,7 @@ const Home = () => {
             console.log("content", data.data);
             setContent(data.data);
         });
-    },[currentPage]);
+    }, [currentPage]);
 
     const changeRating = (id, rating) => {
         const newData = content.map(item => {
@@ -51,10 +49,9 @@ const Home = () => {
     }
 
     const DoSearch = () => {
-        if(currentPage !== 0){
+        if (currentPage !== 0) {
             setCurrentPage(0);
-        }
-        else{
+        } else {
             refetchTrackCount().then((data) => {
                 setTrackCount(data.data);
             });
@@ -66,26 +63,31 @@ const Home = () => {
     }
 
 
-    return (<div className="container">
+    return (
+        <div className="container">
+            <nav>
+                <a className={`${styles.link} ${styles.disabledLink}`}>Search Track</a>
+                <a className={styles.link} href="/playlists">My Playlists</a>
+            </nav>
 
-        <div className="searchBlock">
-            <h3>Tracks Search</h3>
-            <Search DoSearch={DoSearch} setCurrentPage={setCurrentPage} setSearchValue={setSearchValue} setFilterType={setFilterType}
-                    setOrder={setOrder} ratingRangeValue={ratingRangeValue}
-                    setRatingRangeValue={setRatingRangeValue}></Search>
-        </div>
+            <div className="searchBlock">
+                <h3>Tracks Search</h3>
+                <Search DoSearch={DoSearch} setCurrentPage={setCurrentPage} setSearchValue={setSearchValue} setFilterType={setFilterType}
+                        setOrder={setOrder} ratingRangeValue={ratingRangeValue}
+                        setRatingRangeValue={setRatingRangeValue}></Search>
+            </div>
 
 
-        <NavigationArrows amountOfPages={trackCount / TracksPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage}
-                          ChangePage={ChangePage}/>
+            <NavigationArrows amountOfPages={trackCount / TracksPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage}
+                              ChangePage={ChangePage}/>
 
-        <ul className="trackList" id="Tracks">
-            {content && <AllTracksForUser changeRating={changeRating} content={content}/>}
-        </ul>
+            <ul className="trackList" id="Tracks">
+                {content && <AllTracksForUser changeRating={changeRating} content={content}/>}
+            </ul>
 
-        <NavigationArrows amountOfPages={trackCount / TracksPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
-
-    </div>);
+            <NavigationArrows amountOfPages={trackCount / TracksPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage}
+                              ChangePage={ChangePage}/>
+        </div>);
 };
 export default Home;
 

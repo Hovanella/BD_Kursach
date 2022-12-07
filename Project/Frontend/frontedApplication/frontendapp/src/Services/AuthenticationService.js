@@ -14,25 +14,28 @@ const register = (login, password, email) => {
     });
 };
 
-const login = (login, password) => {
-    return axios
-        .post(API_URL + "login", {
+const login = async (login, password) => {
+
+    try {
+        const data = await axios.post(API_URL + "login", {
             login,
             password,
-        })
-        .then((response) => {
-            localStorage.setItem("token", JSON.stringify(response.data));
-        }).catch((error) => {
-            alert(error);
         });
+        localStorage.setItem("token", JSON.stringify(data.data));
+        return true;
+    } catch (e) {
+        alert(e);
+        return false;
+    }
+
 };
 
 const logout = () => {
     localStorage.removeItem("token");
 };
 
-const isAdmin = () => {
-    return axios.get(`${API_URL}is-admin`, {headers: authHeader()})
+const isAdmin =async () => {
+    return await axios.get(`${API_URL}is-admin`, {headers: authHeader()})
 }
 
 
