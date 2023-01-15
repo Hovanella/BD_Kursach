@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 
 import static java.sql.Types.NUMERIC;
 import static java.sql.Types.REF_CURSOR;
@@ -122,4 +123,23 @@ public class UserRepository {
         return user;
     }
 
+    public Collection<String> getLogins() throws SQLException {
+        Connection connection = UnauthorizedUserDataSource.getConnection();
+        java.sql.CallableStatement stmt = connection.prepareCall("{call KURSACH_ADMIN.GET_LOGINS(?)}");
+
+        stmt.registerOutParameter(1, REF_CURSOR);
+        stmt.execute();
+        java.sql.ResultSet rs = (java.sql.ResultSet) stmt.getObject(1);
+        Collection<String> logins = new java.util.ArrayList<>();
+
+        while (rs.next()) {
+            logins.add(rs.getString("login"));
+        }
+
+        connection.close();
+        stmt.close();
+        rs.close();
+        return logins;
+
+    }
 }

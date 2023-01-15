@@ -89,8 +89,9 @@ const Register = () => {
                         </div>
 
                         <input type="submit" className={styles.registerButton} value="Enter the music"/>
+
+                        <a href="/login">Login</a>
                     </form>
-                    {/*TODO MAKE REDIRECT LOGIN BUTTON */}
                 </div>
             </div>
         );

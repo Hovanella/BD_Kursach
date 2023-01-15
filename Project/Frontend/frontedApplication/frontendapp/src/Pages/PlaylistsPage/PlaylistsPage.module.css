@@ -1,43 +1,67 @@
-.container{
+.container {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     gap: 2rem;
 }
-.playlistsButtonSection{
+
+.playlistsButtonSection {
+    background-color: #282727;
     width: 20%;
     position: sticky;
     top: 0;
     align-self: flex-start;
+    height: 110vh;
 }
-.playlistSongsSection{
-    height: max-content;
-    width: 35%;
+
+.playlistSongsSection {
+    width: 40%;
 }
-.songsSearchSection{
+
+.songsSearchSection {
+    background-color: #282727;
     top: 0;
     align-self: flex-start;
     position: sticky;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-right: 2rem;
     justify-content: start;
     width: 40%;
-    height: 90vh;
+    height: 110vh;
 }
-.createNewPlaylist{
-    background-color: silver;
-    border: 1px solid black;
+
+.createNewPlaylist {
+    background-color: white;
+    color: black;
+    border: 3px solid deepskyblue;
     width: 100%;
-    height: 10vh;
+    height: 5vh;
     margin-bottom: 1rem;
+    /*add some coll style for button */
+
 }
-.playlist{
+
+.createNewPlaylist:hover {
+    background-color: deepskyblue;
+    color: white;
+}
+
+.listItem {
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.playlist {
     border-radius: 35px;
     background-color: deepskyblue;
-    border: 1px solid black;
-    width: 91%;
+    width: 80%;
     height: 12vh;
     margin-bottom: 1rem;
     display: flex;
@@ -45,7 +69,8 @@
     align-items: center;
     justify-content: center;
 }
-.playlistsList{
+
+.playlistsList {
     width: 100%;
     height: 100vh;
     scrollbar-gutter: stable;
@@ -53,32 +78,44 @@
     overflow: auto;
     scroll-behavior: smooth;
     overflow-y: scroll;
+    overflow-x: hidden;
+
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
 .playlistButton {
     border-radius: 35px;
     width: 100%;
     height: 12vh;
 }
-.playlistButton:hover{
-    background-color: silver;
-}
-.selectedPlaylist{
+
+.playlistButton:hover {
     background-color: silver;
 }
 
-.playlistButton:active{
+.selectedPlaylist {
+    background-color: silver;
+}
+
+.playlistButton:active {
     background-color: #3f3f6f;
 }
-.link{
+
+.link {
     color: deepskyblue;
 }
 
-.disabledLink{
+.disabledLink {
     color: whitesmoke;
     text-decoration: none;
     cursor: default;
 }
-.linkWrapper{
+
+.linkWrapper {
     width: 50%;
     height: 10vh;
     margin: 0 auto;
@@ -87,14 +124,18 @@
     align-items: center;
 }
 
-.deleteButton{
-    background-color: #4b3c22;
-    border: 1px solid black;
-    width: 50%;
-    height: 10%;
+.deleteButton {
+
     margin: 0 auto;
+    width: 100%;
 }
-.scrollable{
+
+.deletePlaylistButton {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.scrollable {
     height: 100vh;
     scrollbar-gutter: stable;
     scrollbar-width: thin;
@@ -102,9 +143,27 @@
     scroll-behavior: smooth;
     overflow-y: scroll;
 }
-.closedForm{
+
+.closedForm {
     display: none;
 }
-.openForm{
+
+.openForm {
     display: block;
+}
+
+.formTextInput {
+    width: 60%;
+    height: 5vh;
+    background-color: #000000;
+    border: 2px solid deepskyblue;
+    margin-bottom: 1rem;
+}
+
+.formButtonInput {
+    margin-left: 0.2rem;
+    width: 35%;
+    background-color: deepskyblue;
+    height: 5vh;
+    margin-bottom: 1rem;
 }

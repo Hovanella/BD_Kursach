@@ -136,5 +136,10 @@ public class TrackServiceImpl implements TrackService {
         return jsonRepository.ExportTracksForUser(userId);
     }
 
+    @Override
+    public String importTracks(String toString) throws SQLException {
+        return jsonRepository.ImportTracks(toString);
+    }
+
 }
 

@@ -18,4 +18,6 @@ public interface PlaylistService {
     TrackWithUserRating addTrackToPlaylist(Long id, Long trackId) throws SQLException;
 
     PlaylistDTO createPlaylist(String name) throws SQLException;
+
+    void deletePlaylist(Long id) throws SQLException;
 }

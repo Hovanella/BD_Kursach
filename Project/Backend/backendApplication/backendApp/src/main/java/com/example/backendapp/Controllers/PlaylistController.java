@@ -58,4 +58,11 @@ public class PlaylistController {
     }
 
 
+    @DeleteMapping(value = "{id}/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deletePlaylist(@PathVariable Long id) throws SQLException {
+        playlistService.deletePlaylist(id);
+        return new ResponseEntity<>("ok", HttpStatus.OK);
+    }
+
+
 }

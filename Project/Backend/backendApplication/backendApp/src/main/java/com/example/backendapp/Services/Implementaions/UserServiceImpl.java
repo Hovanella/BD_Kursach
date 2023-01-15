@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.Collection;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -89,6 +90,11 @@ public class UserServiceImpl implements UserService {
 
         return userRole.equals("ROLE_ADMIN");
 
+    }
+
+    @Override
+    public Collection<String> getLogins() throws SQLException {
+        return userRepository.getLogins();
     }
 
 }

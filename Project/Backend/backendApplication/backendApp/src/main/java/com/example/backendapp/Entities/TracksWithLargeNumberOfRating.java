@@ -1,5 +1,7 @@
 package com.example.backendapp.Entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Column;
@@ -12,6 +14,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Immutable
+@Getter
+@Setter
 @Table(name = "TRACKS_WITH_LARGE_NUMBER_OF_RATINGS")
 public class TracksWithLargeNumberOfRating {
     @Id
@@ -50,6 +54,6 @@ public class TracksWithLargeNumberOfRating {
         return rateCount;
     }
 
-    protected TracksWithLargeNumberOfRating() {
+    public TracksWithLargeNumberOfRating() {
     }
 }

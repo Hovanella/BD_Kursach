@@ -36,6 +36,6 @@ public class TracksWithLargeAverageRating {
     private BigDecimal averageRate;
 
 
-    protected TracksWithLargeAverageRating() {
+    public TracksWithLargeAverageRating() {
     }
 }

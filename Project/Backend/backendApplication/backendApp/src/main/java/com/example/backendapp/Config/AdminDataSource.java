@@ -20,6 +20,7 @@ public class AdminDataSource {
         config.setMaximumPoolSize(125);
         ds = new HikariDataSource(config);
     }
+    
 
     private AdminDataSource() {
     }

@@ -13,4 +13,5 @@ public class PlaylistDTO implements Serializable {
     private Long id;
     private String name;
     private String authorName;
+    private Long trackCount;
 }

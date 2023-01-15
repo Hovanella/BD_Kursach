@@ -31,4 +31,6 @@ public interface TrackService {
     CreatedTrack createTrack(JsonNode requestBody) throws SQLException;
 
     JSONArray exportTracks() throws SQLException;
+
+    String importTracks(String toString) throws SQLException;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.Collection;
 
 @RestController
@@ -42,14 +43,14 @@ public class StatisticsController {
 
     @GetMapping(value = "tracks-with-largest-number-of-ratings", produces = "application/json")
     @Transactional(readOnly = true)
-    public ResponseEntity<Collection<TracksWithLargeNumberOfRating>> getTracksWithLargestNumberOfRating() {
+    public ResponseEntity<Collection<TracksWithLargeNumberOfRating>> getTracksWithLargestNumberOfRating() throws SQLException {
         var tracks = tracksWithLargestNumberOfRatingsRepository.getTracksWithLargestNumberOfRating();
         return new ResponseEntity<>(tracks, HttpStatus.OK);
     }
 
     @GetMapping(value = "tracks-with-largest-largest-average-rating", produces = "application/json")
     @Transactional(readOnly = true)
-    public ResponseEntity<Collection<TracksWithLargeAverageRating>> getTracksWithLargestAverageRating() {
+    public ResponseEntity<Collection<TracksWithLargeAverageRating>> getTracksWithLargestAverageRating() throws SQLException {
         var tracks = tracksWithLargestAverageRatingRepository.getTracksWithLargestAverageRating();
         return new ResponseEntity<>(tracks, HttpStatus.OK);
     }
@@ -57,35 +58,35 @@ public class StatisticsController {
 
     @GetMapping(value = "genres-with-largest-number-of-tracks", produces = "application/json")
     @Transactional(readOnly = true)
-    public ResponseEntity<Collection<GenresWithLargeNumberOfTrack>> getGenresWithLargestNumberOfTracks() {
+    public ResponseEntity<Collection<GenresWithLargeNumberOfTrack>> getGenresWithLargestNumberOfTracks() throws SQLException {
         var tracks = genresWithLargestNumberOfTracksRepository.genresWithLargestNumberOfTracks();
         return new ResponseEntity<>(tracks, HttpStatus.OK);
     }
 
     @GetMapping(value = "genres-with-largest-number-of-ratings", produces = "application/json")
     @Transactional(readOnly = true)
-    public ResponseEntity<Collection<GenresWithLargeNumberOfRating>> getGenresWithLargestNumberOfRatings() {
+    public ResponseEntity<Collection<GenresWithLargeNumberOfRating>> getGenresWithLargestNumberOfRatings() throws SQLException {
         var tracks = genresWithLargestNumberOfRatingsRepository.genresWithLargestNumberOfRatings();
         return new ResponseEntity<>(tracks, HttpStatus.OK);
     }
 
     @GetMapping(value = "authors-with-largest-number-of-tracks", produces = "application/json")
     @Transactional(readOnly = true)
-    public ResponseEntity<Collection<AuthorsWithLargeNumberOfTrack>> getAuthorsWithLargestNumberOfTracks() {
+    public ResponseEntity<Collection<AuthorsWithLargeNumberOfTrack>> getAuthorsWithLargestNumberOfTracks() throws SQLException {
         var tracks = authorsWithLargestNumberOfTracksRepository.authorsWithLargestNumberOfTracks();
         return new ResponseEntity<>(tracks, HttpStatus.OK);
     }
 
     @GetMapping(value = "authors-with-largest-number-of-ratings", produces = "application/json")
     @Transactional(readOnly = true)
-    public ResponseEntity<Collection<AuthorsWithLargeNumberOfRating>> getAuthorsWithLargestNumberOfRatings() {
+    public ResponseEntity<Collection<AuthorsWithLargeNumberOfRating>> getAuthorsWithLargestNumberOfRatings() throws SQLException {
         var tracks = authorsWithLargestNumberOfRatingsRepository.authorsWithLargestNumberOfRatings();
         return new ResponseEntity<>(tracks, HttpStatus.OK);
     }
 
     @GetMapping(value = "users-with-largest-number-of-ratings", produces = "application/json")
     @Transactional(readOnly = true)
-    public ResponseEntity<Collection<UsersWithLargeNumberOfRating>> getUsersWithLargestNumberOfRatings() {
+    public ResponseEntity<Collection<UsersWithLargeNumberOfRating>> getUsersWithLargestNumberOfRatings() throws SQLException {
         var tracks = usersWithLargestNumberOfRatingsRepository.usersWithLargestNumberOfRatings();
         return new ResponseEntity<>(tracks, HttpStatus.OK);
     }

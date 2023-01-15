@@ -1,5 +1,7 @@
 package com.example.backendapp.Entities;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Column;
@@ -11,6 +13,8 @@ import javax.persistence.Table;
  * Mapping for DB view
  */
 @Entity
+@Setter
+@Getter
 @Immutable
 @Table(name = "USERS_WITH_LARGE_NUMBER_OF_RATINGS")
 public class UsersWithLargeNumberOfRating {
@@ -36,6 +40,6 @@ public class UsersWithLargeNumberOfRating {
         return countRate;
     }
 
-    protected UsersWithLargeNumberOfRating() {
+    public UsersWithLargeNumberOfRating() {
     }
 }

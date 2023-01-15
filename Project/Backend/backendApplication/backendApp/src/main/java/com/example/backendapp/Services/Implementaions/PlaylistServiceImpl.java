@@ -124,5 +124,10 @@ public class PlaylistServiceImpl implements PlaylistService {
         return newPlaylist;
     }
 
+    @Override
+    public void deletePlaylist(Long id) throws SQLException {
+        playlistRepository.deletePlaylist(id);
+    }
+
 
 }

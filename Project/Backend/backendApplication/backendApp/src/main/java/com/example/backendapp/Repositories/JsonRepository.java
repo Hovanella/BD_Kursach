@@ -34,4 +34,10 @@ public class JsonRepository {
         rs.close();
         return json;
     }
+
+    public String ImportTracks(String toString) throws SQLException {
+        Connection clientConnection = ClientDataSource.getConnection();
+        return "asd";
+        /*java.sql.CallableStatement stmt = clientConnection.prepareCall("{call KURSACH_ADMIN.TRACKS_TO_JSON(?,?)}");*/
+    }
 }

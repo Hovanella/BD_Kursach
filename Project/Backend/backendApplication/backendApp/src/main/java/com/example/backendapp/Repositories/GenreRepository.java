@@ -2,7 +2,6 @@ package com.example.backendapp.Repositories;
 
 import com.example.backendapp.Config.AdminDataSource;
 import com.example.backendapp.Entities.Genre;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -19,21 +18,28 @@ public class GenreRepository {
     }
 
 
-    public Genre saveGenre(@Param("name_") String name) throws SQLException {
+    public Genre saveGenre(String name) throws SQLException {
+
         Connection adminConnection = AdminDataSource.getConnection();
-        java.sql.CallableStatement stmt = adminConnection.prepareCall("{call KURSACH_ADMIN.ADD_GENRE(?,?)}");
-        stmt.setString(1, name);
-        stmt.registerOutParameter(2, REF_CURSOR);
-        stmt.execute();
-        java.sql.ResultSet rs = (java.sql.ResultSet) stmt.getObject(2);
+
+        java.sql.CallableStatement prepareCall = adminConnection.prepareCall("{call KURSACH_ADMIN.ADD_GENRE(?,?)}");
+
+        prepareCall.setString(1, name);
+        prepareCall.registerOutParameter(2, REF_CURSOR);
+        prepareCall.execute();
+
+        java.sql.ResultSet rs = (java.sql.ResultSet) prepareCall.getObject(2);
 
         var genre = new Genre();
         rs.next();
+
         genre.setId(rs.getLong("id"));
         genre.setName(rs.getString("name"));
+
         adminConnection.close();
-        stmt.close();
+        prepareCall.close();
         rs.close();
+
         return genre;
     }
 

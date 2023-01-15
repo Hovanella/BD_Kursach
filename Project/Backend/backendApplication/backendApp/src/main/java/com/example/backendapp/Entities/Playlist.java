@@ -22,6 +22,9 @@ public class Playlist {
     @Column(name = "USER_ID", nullable = false)
     private Long userId;
 
+    @Column(name = "TRACK_COUNT", nullable = false)
+    private Long trackCount;
+
     @ManyToMany(mappedBy = "playlists")
     private Collection<Track> tracks;
 

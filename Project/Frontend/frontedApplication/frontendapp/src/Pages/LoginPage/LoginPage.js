@@ -63,6 +63,8 @@ const Login = () => {
                     </div>
 
                     <input type="submit" className={styles.loginButton} value="Return to the world of music"/>
+
+                    <a href="/register">Register</a>
                 </form>
             </div>
         </div>

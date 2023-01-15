@@ -1,5 +1,6 @@
 package com.example.backendapp.Repositories;
 
+import com.example.backendapp.Config.AdminDataSource;
 import com.example.backendapp.Config.ClientDataSource;
 import com.example.backendapp.Entities.Track;
 import org.springframework.data.repository.query.Param;
@@ -55,21 +56,21 @@ public class TrackRepository {
 
 
     public Long uploadTrackFile(@Param("track_file_") byte[] fileBytes) throws SQLException {
-        Connection clientConnection = ClientDataSource.getConnection();
-        java.sql.CallableStatement stmt = clientConnection.prepareCall("{call KURSACH_ADMIN. CREATE_TRACK_FILE(?,?)}");
+        Connection adminConnection = AdminDataSource.getConnection();
+        java.sql.CallableStatement stmt = adminConnection.prepareCall("{call KURSACH_ADMIN. CREATE_TRACK_FILE(?,?)}");
         stmt.setBytes(1, fileBytes);
         stmt.registerOutParameter(2, NUMERIC);
         stmt.execute();
 
         var rs = stmt.getLong(2);
-        clientConnection.close();
+        adminConnection.close();
         stmt.close();
         return rs;
     }
 
 
     public Track createTrack(@Param("track_name_") String name, @Param("genre_id_") long genreId, @Param("author_id_") long authorId, @Param("track_file_id_") long trackFileId) throws SQLException {
-        Connection clientConnection = ClientDataSource.getConnection();
+        Connection clientConnection = AdminDataSource.getConnection();
         java.sql.CallableStatement stmt = clientConnection.prepareCall("{call KURSACH_ADMIN. CREATE_TRACK(?,?,?,?,?)}");
         stmt.setString(1, name);
         stmt.setLong(2, genreId);

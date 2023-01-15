@@ -29,6 +29,7 @@ export const PlaylistsPage = () => {
     const [trackCount, setTrackCount] = useState(0);
 
     const [isFormClosed, setIsFormClosed] = useState(true);
+    const playlistNameRef = React.useRef();
 
     const TracksPerPage = 5;
 
@@ -45,7 +46,6 @@ export const PlaylistsPage = () => {
     const ChangePage = (page) => {
         setCurrentPage(page);
     }
-
 
 
     const DoSearch = () => {
@@ -92,10 +92,15 @@ export const PlaylistsPage = () => {
             alert("DELETION FROM PLAYLIST FAILED TRY AGAIN OR NEVER USE ORACLE")
             return;
         }
+
+
         refetchPlaylistTracks().then((response) => {
             setPlaylistTracks(response.data);
             console.log(response.data);
         });
+
+        playlists.find((playlist) => playlist.id === selectedPlaylist).trackCount--;
+
 
     }
 
@@ -109,6 +114,9 @@ export const PlaylistsPage = () => {
             alert("ADDING TO PLAYLIST FAILED TRY AGAIN OR NEVER USE ORACLE")
             return;
         }
+
+        playlists.find((playlist) => playlist.id === selectedPlaylist).trackCount++;
+
         refetchPlaylistTracks().then((response) => {
             setPlaylistTracks(response.data);
             console.log(response.data);
@@ -116,8 +124,29 @@ export const PlaylistsPage = () => {
 
     }
 
-    const createNewPlaylist =  () => {
+    const createNewPlaylist = (e) => {
+        setIsFormClosed(false);
+        const name = playlistNameRef.current.value;
+        if (!name) return;
+        PlaylistsService.createPlaylist(name).then(() => {
+            refetchPlaylists().then((response) => {
+                setPlaylists(response.data);
+            });
+        }).catch(() => {
+            alert("CREATING PLAYLIST FAILED TRY AGAIN OR NEVER USE ORACLE")
+        });
     };
+    const deletePlaylistHandler = (id) => {
+        if (!id) return;
+        PlaylistsService.deletePlaylist(id).then(() => {
+            refetchPlaylists().then((response) => {
+                setPlaylists(response.data);
+            }).catch(() => {
+                alert("DELETION FAILED TRY AGAIN OR NEVER USE ORACLE")
+            });
+        });
+    };
+
     return (
         <>
             <nav>
@@ -129,19 +158,24 @@ export const PlaylistsPage = () => {
 
                     <button className={styles.createNewPlaylist} onClick={() => setIsFormClosed(prevState => !prevState)}>Create New Playlist</button>
                     <form className={isFormClosed ? `${styles.closedForm}` : `${styles.openForm}`}>
-                        <input type="button" onClick={()=>setIsFormClosed(true)} value="Close Form"/>
-                        <input type="text" placeholder="Enter Playlist name"/>
-                        <input type="submit" value="Create"/>
+                        <input className={styles.formTextInput} type="text" ref={playlistNameRef} placeholder="Enter Playlist name"/>
+                        <input className={styles.formButtonInput}  type="button" onClick={createNewPlaylist} value="Create"/>
                     </form>
 
                     <ul className={styles.playlistsList}>
                         {playlists?.map((playlist) => (
-                            <li className={styles.playlist} key={`${playlist.id} playlist`}>
+                            <li className={styles.listItem} key={`${playlist.id} playlist`}>
+                                <div  className={styles.playlist} key={`${playlist.id} playlist div`}>
                                 <button key={`${playlist.id} playlist deletebutton`} onClick={() => handlePlaylistButtonClick(playlist.id)}
-                                        className={playlist.id ===selectedPlaylist ?  `${styles.playlistButton} ${styles.selectedPlaylist}` :styles.playlistButton }>
+                                        className={playlist.id === selectedPlaylist ? `${styles.playlistButton} ${styles.selectedPlaylist}` : styles.playlistButton}>
                                     <h3 key={`${playlist.id} playlist header`}>{playlist.name}</h3>
+                                    <h4 >Count : {playlist.trackCount}</h4>
                                 </button>
+                                </div>
+                                <button className={styles.deletePlaylistButton} key={`${playlist.id} playlist deletebutton`} onClick={() => deletePlaylistHandler(playlist.id)}>
+                                    <img width={30} src="./remove.png" alt=""/></button>
                             </li>
+
                         ))}
 
                     </ul>
@@ -149,7 +183,7 @@ export const PlaylistsPage = () => {
 
                 </div>
                 <div className={styles.playlistSongsSection} id="PlaylistSongs">
-                    <ul >
+                    <ul>
                         {playlistTracks && playlistTracks.map((item) => (
                             <>
                                 <TrackPlayer key={`trackPlayer  ${item.id}`} item={item}/>
@@ -162,8 +196,8 @@ export const PlaylistsPage = () => {
                 </div>
                 <div className={styles.songsSearchSection} id="SearchSongsForPlaylist">
                     <Search DoSearch={DoSearch} setCurrentPage={setCurrentPage} setSearchValue={setSearchValue} setFilterType={setFilterType}
-                                    setOrder={setOrder} ratingRangeValue={ratingRangeValue}
-                                    setRatingRangeValue={setRatingRangeValue} />
+                            setOrder={setOrder} ratingRangeValue={ratingRangeValue}
+                            setRatingRangeValue={setRatingRangeValue}/>
 
                     <NavigationArrows amountOfPages={trackCount / TracksPerPage} currentPage={currentPage} setCurrentPage={setCurrentPage}
                                       ChangePage={ChangePage}/>

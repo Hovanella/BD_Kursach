@@ -26,11 +26,24 @@ const  addTrackToPlaylist = async (trackId, selectedPlaylist)=>{
     return response.data;
 }
 
+const deletePlaylist = async (id)=>{
+    const response = await axios.delete(`${API_URL}${id}/delete`, {headers:authHeader()})
+    return response.data;
+};
+
+const createPlaylist = async (name)=>{
+    const response = await axios.post(`${API_URL}create`,{name}, {headers:authHeader()})
+    return response.data;
+}
+
+
 const PlaylistsService = {
     getPlaylists,
     getPlaylistTracks,
     deleteTrackFromPlaylist,
-    addTrackToPlaylist
+    addTrackToPlaylist,
+    deletePlaylist,
+    createPlaylist
 };
 
 export default PlaylistsService;

@@ -43,6 +43,7 @@ grant connect to unauthorized_user;
 grant execute on GET_USER_BY_ID to unauthorized_user;
 grant execute on GET_USER_ID_BY_LOGIN to unauthorized_user;
 grant execute on REGISTER_USER to unauthorized_user;
+grant execute on GET_LOGINS to unauthorized_user;
 
 
 --admin
@@ -58,6 +59,14 @@ grant execute on ADD_AUTHOR to admin;
 grant execute on ADD_GENRE to admin;
 grant execute on GET_GENRES to admin;
 grant execute on GET_AUTHORS to admin;
+grant execute on GET_TRACKS_WITH_LARGEST_AVERAGE_RATING to admin;
+grant execute on GET_TRACKS_WITH_LARGEST_NUMBER_OF_RATING to admin;
+grant execute on GET_AUTHORS_WITH_LARGEST_NUMBER_OF_RATING to admin;
+grant execute on GET_AUTHORS_WITH_LARGEST_NUMBER_OF_TRACKS to admin;
+grant execute on GET_GENRES_WITH_LARGEST_NUMBER_OF_TRACKS to admin;
+grant execute on GET_GENRES_WITH_LARGEST_NUMBER_OF_RATING to admin;
+grant execute on GET_USERS_WITH_LARGEST_NUMBER_OF_RATING to admin;
+
 
 --client
 create user client identified by client
@@ -82,6 +91,7 @@ grant execute on GET_TRACK_COUNT to client;
 grant execute on GET_TRACK_FILE to client;
 grant execute on GET_RATING_FOR_TRACK_FROM_USER to client;
 grant execute on TRACKS_TO_JSON  to client;
+grant execute on DELETE_PLAYLIST to client;
 
 
 
@@ -193,6 +203,8 @@ create table PLAYLISTS(
 
     foreign key (user_id) references USERS(id)
 );
+--alter playlists and set the track_count field that has default value 0
+alter table playlists add track_count number(10) default 0 not null;
 
 -- 8. Таблица "Playlist_Tracks" (id,playlist_id,track_id)
 create table PLAYLIST_TRACKS(
@@ -206,4 +218,20 @@ create table PLAYLIST_TRACKS(
 
 
 
+create or replace trigger increment_track_count
+after insert on PLAYLIST_TRACKS
+for each row
+begin
+    update playlists set track_count = track_count + 1 where id = :new.playlist_id;
+end;
 
+
+create or replace trigger decrement_track_count
+after delete on PLAYLIST_TRACKS
+for each row
+begin
+    update playlists set track_count = track_count - 1 where id = :old.playlist_id;
+end;
+
+
+create index USERS_INDEX on USERS(LOGIN)

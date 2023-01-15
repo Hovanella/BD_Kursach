@@ -28,7 +28,7 @@ import java.util.Collection;
 public class TrackController {
     private final TrackService trackService;
 
-    @Value("${upload-path}")
+    @Value("${export-path}")
     private String uploadPath;
 
     @Autowired
@@ -98,6 +98,25 @@ public class TrackController {
         }
 
         return new ResponseEntity<>(trackService.exportTracks(), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/import-tracks", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> importTracks() throws SQLException {
+        var path = uploadPath + "tracks.json";
+        //read json file data to String
+        StringBuilder contentBuilder = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+
+            String sCurrentLine;
+            while ((sCurrentLine = br.readLine()) != null) {
+                contentBuilder.append(sCurrentLine).append("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(trackService.importTracks(contentBuilder.toString()), HttpStatus.OK);
+
     }
 
 }

@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
+import java.util.Collection;
+
 @RestController
 @RequestMapping("/users/")
 @CrossOrigin("*")
@@ -52,6 +55,11 @@ public class UserController {
     @GetMapping(value = "is-admin", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> isAdmin() {
         return new ResponseEntity<>(userService.isAdmin(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "logins", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<String>> getLogins() throws SQLException {
+        return new ResponseEntity<>(userService.getLogins(), HttpStatus.OK);
     }
 
 

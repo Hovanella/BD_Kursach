@@ -35,6 +35,7 @@ public class PlaylistRepository {
             playlist.setId(rs.getLong("id"));
             playlist.setName(rs.getString("name"));
             playlist.setUserId(rs.getLong("user_id"));
+            playlist.setTrackCount(rs.getLong("track_count"));
             playlists.add(playlist);
         }
         clientConnection.close();
@@ -85,4 +86,15 @@ public class PlaylistRepository {
 
         return playlist;
     }
+
+    public void deletePlaylist(Long id) throws SQLException {
+        Connection clientConnection = ClientDataSource.getConnection();
+        java.sql.CallableStatement stmt = clientConnection.prepareCall("{call KURSACH_ADMIN.DELETE_PLAYLIST(?)}");
+        stmt.setLong(1, id);
+        stmt.execute();
+        stmt.close();
+        clientConnection.close();
+    }
+
+
 }

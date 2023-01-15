@@ -5,6 +5,7 @@ import com.example.backendapp.DTO.UnregisteredUser;
 import com.example.backendapp.Entities.User;
 
 import java.sql.SQLException;
+import java.util.Collection;
 
 public interface UserService {
 
@@ -16,4 +17,6 @@ public interface UserService {
 
 
     Boolean isAdmin();
+
+    Collection<String> getLogins() throws SQLException;
 }
